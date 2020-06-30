@@ -168,10 +168,13 @@
     /* Feature list may be empty, but no empty features in list. */
     feature_list:
       /* empty */  {  $$ = nil_Features(); }
-    | feature ';' { $$ = single_Features($1); }
+    | feature  { $$ = single_Features($1); }
+    | feature_list feature { $$ = append_Features($1, single_Features($2)); }
+    ;
 
     feature:
-      OBJECTID ':' TYPEID { $$ = attr($1, $3, no_expr()); }
+      OBJECTID ':' TYPEID ';' { $$ = attr($1, $3, no_expr()); }
+    ;
 
     /* end of grammar */
     %%
