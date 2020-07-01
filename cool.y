@@ -184,6 +184,15 @@
     | expr '-' expr { $$ = sub($1, $3); }
     | expr '/' expr { $$ = mul($1, $3); }
     | expr '*' expr { $$ = divide($1, $3); }
+    | '~' expr      { $$ = comp($2); }
+    | expr '<' expr { $$ = lt($1, $3); }
+    | expr LE expr  { $$ = leq($1, $3); }
+    | expr '=' expr { $$ = eq($1, $3); }
+    | NOT expr      { $$ = neg($2); }
+    | OBJECTID      { $$ = object($1); }
+    | ISVOID expr   { $$ = isvoid($2); }
+    | NEW TYPEID    { $$ = new_($2); }
+    | IF expr THEN expr ELSE expr FI { $$ = cond($2, $4, $6); }
     ;
 
     /* end of grammar */
