@@ -138,7 +138,7 @@
     %type <feature> feature
 
     %type <expressions> expr_list opt_arg_list arg_list
-    %type <expression> expr dispatch opt_assign
+    %type <expression> expr dispatch opt_assign let sublet
 
     %type <formals> opt_formal_list formal_list
     %type <formal> formal
@@ -147,6 +147,8 @@
     %type <case_> case
 
     /* Precedence declarations go here. */
+
+    %right IN // TODO: is this right?
 
     %left '.'
     %left '@'
@@ -235,6 +237,17 @@
     | CASE expr OF case_list ESAC { $$ = typcase($2, $4); }
     | '{' expr_list '}'  { $$ = block($2); }
     | dispatch { $$ = $1; }
+    | let { $$ = $1; }
+    ;
+
+    let:
+      LET OBJECTID ':' TYPEID opt_assign IN expr    { $$ = let($2, $4, $5, $7); }
+    | LET OBJECTID ':' TYPEID opt_assign sublet  { $$ = let($2, $4, $5, $6); }
+    ;
+
+    sublet:
+      ',' OBJECTID ':' TYPEID opt_assign IN expr  { $$ = let($2, $4, $5, $7); }
+    | ',' OBJECTID ':' TYPEID opt_assign sublet { $$ = let($2, $4, $5, $6); }
     ;
 
     dispatch:

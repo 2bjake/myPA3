@@ -1,5 +1,5 @@
 class Bar {bar: Int;};
-
+(*
 class Main {
   bar: Int;
   baz: Int <- 42;
@@ -29,6 +29,14 @@ class Main {
   call: Int <- fun2();
   call2: Int <- self.fun(5);
   call3: Int <- self@Main.fun2();
+  letval: Int <- let x: Int <- 22 in x;
+  letval2: Int <- let x: Int <- 22, y: Bool in x;
+    letval2: Int <- let x: Int <- 22, y: Bool, z: String in x;
 };
 
 class Foo inherits Main {};
+*)
+
+class LL {
+  l: Int <- let x: Int in let y: Int in x;
+};
