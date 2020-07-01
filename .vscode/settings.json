@@ -1,5 +1,14 @@
 {
     "files.associations": {
-        "*.y": "c"
+        "*.y": "c",
+        "__functional_03": "c",
+        "__string": "c",
+        "deque": "c",
+        "filesystem": "c",
+        "functional": "c",
+        "string": "c",
+        "system_error": "c",
+        "vector": "c",
+        "ios": "c"
     }
 }

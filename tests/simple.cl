@@ -1,5 +1,5 @@
 class Bar {bar: Int;};
-(*
+
 class Main {
   bar: Int;
   baz: Int <- 42;
@@ -35,7 +35,7 @@ class Main {
 };
 
 class Foo inherits Main {};
-*)
+
 
 class LL {
   l: Int <- let x: Int in let y: Int in x;

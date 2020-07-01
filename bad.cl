@@ -14,7 +14,7 @@ class A {
 (* error:  b is not a type identifier *)
 Class b inherits A {
 };
-
+(*
 (* error:  a is not a type identifier *)
 Class C inherits a {
 };
@@ -27,3 +27,8 @@ Class D inherts A {
 Class E inherits A {
 ;
 
+*)
+
+(* no error *)
+class Foo {
+};
