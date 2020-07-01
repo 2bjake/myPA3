@@ -19,6 +19,10 @@ class Main {
   isv: Bool <- isvoid voi;
   bar: Bar <- new Bar;
   num: Int <- if 5 < 3 then 2 else 1 fi;
+  add: Int <- while baz < 43 loop baz <- baz + 1 pool;
+  fun(asdf: Int): Int { 5 };
+  fun2(): Int { 5 };
+  fun3(asdf: Int, qwer: Bool): Int { 5 };
 };
 
 class Foo inherits Main {};

@@ -140,6 +140,9 @@
 
     %type <expression> expr
 
+    %type <formals> formal_list
+    %type <formal> formal
+
     /* Precedence declarations go here. */
 
 
@@ -173,6 +176,8 @@
     feature:
       OBJECTID ':' TYPEID ';' { $$ = attr($1, $3, no_expr()); }
     | OBJECTID ':' TYPEID ASSIGN expr ';' { $$ = attr($1, $3, $5); }
+    | OBJECTID '(' ')' ':' TYPEID '{' expr '}' ';'  { $$ = method($1, nil_Formals(), $5, $7); }
+    | OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'  { $$ = method($1, $3, $6, $8); }
     ;
 
     expr:
@@ -193,6 +198,17 @@
     | ISVOID expr   { $$ = isvoid($2); }
     | NEW TYPEID    { $$ = new_($2); }
     | IF expr THEN expr ELSE expr FI { $$ = cond($2, $4, $6); }
+    | WHILE expr LOOP expr POOL { $$ = loop($2, $4); }
+    | OBJECTID ASSIGN expr { $$ = assign($1, $3); }
+    ;
+
+    formal_list:
+    | formal                 { $$ = single_Formals($1); }
+    | formal_list ',' formal { $$ = append_Formals($1, single_Formals($3)); }
+    ;
+
+    formal:
+      OBJECTID ':' TYPEID  { $$ = formal($1, $3); }
     ;
 
     /* end of grammar */
