@@ -145,33 +145,29 @@
     /*
     Save the root of the abstract syntax tree in a global variable.
     */
-    program	: class_list	{ @$ = @1; ast_root = program($1); }
+    program:
+      class_list	{ @$ = @1; ast_root = program($1); }
     ;
 
-    class_list
-    : class			/* single class */
-    { $$ = single_Classes($1);
-    parse_results = $$; }
-    | class_list class	/* several classes */
-    { $$ = append_Classes($1,single_Classes($2));
-    parse_results = $$; }
+    class_list:
+      class  { $$ = single_Classes($1); parse_results = $$; }
+    | class_list class  { $$ = append_Classes($1, single_Classes($2)); parse_results = $$; }
     ;
 
     /* If no parent is specified, the class inherits from the Object class. */
-    class	: CLASS TYPEID '{' feature_list '}' ';'
-    { $$ = class_($2,idtable.add_string("Object"),$4,
-    stringtable.add_string(curr_filename)); }
-    | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
-    { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
+    class:
+      CLASS TYPEID '{' feature_list '}' ';'  { $$ = class_($2, idtable.add_string("Object"), $4, stringtable.add_string(curr_filename)); }
+    | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'  { $$ = class_($2, $4, $6, stringtable.add_string(curr_filename)); }
     ;
 
     /* Feature list may be empty, but no empty features in list. */
     feature_list:
-      /* empty */  {  $$ = nil_Features(); }
-    | feature  { $$ = single_Features($1); }
+      /* empty */          { $$ = nil_Features(); }
+    | feature              { $$ = single_Features($1); }
     | feature_list feature { $$ = append_Features($1, single_Features($2)); }
     ;
 
+    // TODO: add other feature types!
     feature:
       OBJECTID ':' TYPEID ';' { $$ = attr($1, $3, no_expr()); }
     ;
