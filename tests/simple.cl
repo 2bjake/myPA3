@@ -1,4 +1,4 @@
-class Bar {};
+class Bar {bar: Int;};
 
 class Main {
   bar: Int;

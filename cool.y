@@ -148,6 +148,15 @@
 
     /* Precedence declarations go here. */
 
+    %left '.'
+    %left '@'
+    %left '~'
+    %left ISVOID
+    %left '*' '/'
+    %left '+' '-'
+    %nonassoc LE '<' '='
+    %left NOT
+    %right ASSIGN
 
     %%
     /*
@@ -166,12 +175,12 @@
     class:
       CLASS TYPEID '{' feature_list '}' ';'  { $$ = class_($2, idtable.add_string("Object"), $4, stringtable.add_string(curr_filename)); }
     | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'  { $$ = class_($2, $4, $6, stringtable.add_string(curr_filename)); }
+    | CLASS TYPEID INHERITS TYPEID '{' '}' ';'  { $$ = class_($2, $4, nil_Features(), stringtable.add_string(curr_filename)); }
     ;
 
     /* Feature list may be empty, but no empty features in list. */
     feature_list:
-      /* empty */          { $$ = nil_Features(); }
-    | feature              { $$ = single_Features($1); }
+      feature              { $$ = single_Features($1); }
     | feature_list feature { $$ = append_Features($1, single_Features($2)); }
     ;
 
@@ -213,7 +222,7 @@
     ;
 
     formal_list:
-    | formal                 { $$ = single_Formals($1); }
+      formal                 { $$ = single_Formals($1); }
     | formal_list ',' formal { $$ = append_Formals($1, single_Formals($3)); }
     ;
 
