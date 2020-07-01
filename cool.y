@@ -138,6 +138,8 @@
     %type <features> feature_list
     %type <feature> feature
 
+    %type <expression> expr
+
     /* Precedence declarations go here. */
 
 
@@ -170,6 +172,18 @@
     // TODO: add other feature types!
     feature:
       OBJECTID ':' TYPEID ';' { $$ = attr($1, $3, no_expr()); }
+    | OBJECTID ':' TYPEID ASSIGN expr ';' { $$ = attr($1, $3, $5); }
+    ;
+
+    expr:
+      INT_CONST     { $$ = int_const($1); }
+    | BOOL_CONST    { $$ = bool_const($1); }
+    | STR_CONST     { $$ = string_const($1); }
+    | '(' expr ')'  { $$ = $2; }
+    | expr '+' expr { $$ = plus($1, $3); }
+    | expr '-' expr { $$ = sub($1, $3); }
+    | expr '/' expr { $$ = mul($1, $3); }
+    | expr '*' expr { $$ = divide($1, $3); }
     ;
 
     /* end of grammar */
