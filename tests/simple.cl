@@ -23,6 +23,9 @@ class Main {
   fun(asdf: Int): Int { 5 };
   fun2(): Int { 5 };
   fun3(asdf: Int, qwer: Bool): Int { 5 };
+  val: Int <- case neg of a: Int => 2; esac;
+  val2: Int <- case neg of a: Int => 2; b: Bool => 3; esac;
+  blk: Int <- { dif; div; neg < sum; 2; };
 };
 
 class Foo inherits Main {};

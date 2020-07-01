@@ -134,14 +134,17 @@
     %type <classes> class_list
     %type <class_> class
 
-    /* You will want to change the following line. */
     %type <features> feature_list
     %type <feature> feature
 
+    %type <expressions> expr_list
     %type <expression> expr
 
     %type <formals> formal_list
     %type <formal> formal
+
+    %type <cases> case_list
+    %type <case_> case
 
     /* Precedence declarations go here. */
 
@@ -180,6 +183,11 @@
     | OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'  { $$ = method($1, $3, $6, $8); }
     ;
 
+    expr_list:
+      expr ';'            { $$ =  single_Expressions($1); }
+    | expr_list expr ';'  { $$ = append_Expressions($1, single_Expressions($2)); }
+    ;
+
     expr:
       INT_CONST     { $$ = int_const($1); }
     | BOOL_CONST    { $$ = bool_const($1); }
@@ -200,6 +208,8 @@
     | IF expr THEN expr ELSE expr FI { $$ = cond($2, $4, $6); }
     | WHILE expr LOOP expr POOL { $$ = loop($2, $4); }
     | OBJECTID ASSIGN expr { $$ = assign($1, $3); }
+    | CASE expr OF case_list ESAC { $$ = typcase($2, $4); }
+    | '{' expr_list '}'  { $$ = block($2); }
     ;
 
     formal_list:
@@ -209,6 +219,15 @@
 
     formal:
       OBJECTID ':' TYPEID  { $$ = formal($1, $3); }
+    ;
+
+    case_list:
+      case            { $$ = single_Cases($1); }
+    | case_list case  { $$ = append_Cases($1, single_Cases($2)); }
+    ;
+
+    case:
+      OBJECTID ':' TYPEID DARROW expr ';'  { $$ = branch($1, $3, $5); }
     ;
 
     /* end of grammar */
