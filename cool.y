@@ -137,8 +137,8 @@
     %type <features> feature_list
     %type <feature> feature
 
-    %type <expressions> expr_list
-    %type <expression> expr
+    %type <expressions> expr_list opt_arg_list arg_list
+    %type <expression> expr dispatch
 
     %type <formals> formal_list
     %type <formal> formal
@@ -192,6 +192,15 @@
     | OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'  { $$ = method($1, $3, $6, $8); }
     ;
 
+    opt_arg_list:
+      /* empty */  { $$ = nil_Expressions(); }
+    | arg_list     { $$ = $1; }
+
+    arg_list:
+      expr                 { $$ = single_Expressions($1); }
+    | arg_list ',' expr { $$ = append_Expressions($1, single_Expressions($3)); }
+    ;
+
     expr_list:
       expr ';'            { $$ =  single_Expressions($1); }
     | expr_list expr ';'  { $$ = append_Expressions($1, single_Expressions($2)); }
@@ -219,6 +228,13 @@
     | OBJECTID ASSIGN expr { $$ = assign($1, $3); }
     | CASE expr OF case_list ESAC { $$ = typcase($2, $4); }
     | '{' expr_list '}'  { $$ = block($2); }
+    | dispatch { $$ = $1; }
+    ;
+
+    dispatch:
+      OBJECTID '(' opt_arg_list ')' { $$ = dispatch(no_expr(), $1, $3); }
+    | expr '.' OBJECTID '(' opt_arg_list ')' { $$ = dispatch($1, $3, $5); }
+    | expr '@' TYPEID '.' OBJECTID '(' opt_arg_list ')' { $$ = static_dispatch($1, $3, $5, $7); }
     ;
 
     formal_list:

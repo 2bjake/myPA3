@@ -26,6 +26,9 @@ class Main {
   val: Int <- case neg of a: Int => 2; esac;
   val2: Int <- case neg of a: Int => 2; b: Bool => 3; esac;
   blk: Int <- { dif; div; neg < sum; 2; };
+  call: Int <- fun2();
+  call2: Int <- self.fun(5);
+  call3: Int <- self@Main.fun2();
 };
 
 class Foo inherits Main {};
